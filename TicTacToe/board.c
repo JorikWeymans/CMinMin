@@ -4,9 +4,9 @@
 
 #define BUFFER_COUNT 41
 
-pBoard Board_Create()
+BoardPtr Board_Create()
 {
-	pBoard board = (struct Board*)malloc(sizeof(struct Board));
+	BoardPtr board = (struct Board*)malloc(sizeof(struct Board));
 
 	if(board == NULL) return NULL;
 
@@ -32,7 +32,7 @@ pBoard Board_Create()
 	
 	return board;
 }
-void Board_Print(pBoard board)
+void Board_Print(BoardPtr board)
 {
 	char buffer[BUFFER_COUNT];
 	
@@ -69,9 +69,9 @@ void Board_Print(pBoard board)
 	
 	
 }
-void Board_SetPiece(pBoard board, int x, int y, BoardPiece data)
+void Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
 {
-	if(x > 2 || x < 0|| y > 2 || y < 2)
+	if(x > 2 || x < 0|| y > 2 || y < 0)
 	{
 		printf_s("[Board_SetPiece] the value of x and y should be between 0 and 2!\n");
 		return;

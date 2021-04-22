@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#define pBoard struct Board*
+#define BoardPtr struct Board*
 #define BOARD_SIZE 9
 #define BOARD_ROW_SIZE 3
 
@@ -32,8 +32,8 @@ struct Board
 
 
 
-pBoard Board_Create();
-void Board_Print(pBoard board);
-void Board_SetPiece(pBoard board, int x, int y, BoardPiece data);
+BoardPtr Board_Create();
+void Board_Print(BoardPtr board);
+void Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data);
 
 #endif
