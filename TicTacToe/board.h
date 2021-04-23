@@ -7,33 +7,37 @@
 
 typedef enum 
 {
-	Piece_E, //empty
-	Piece_X,
-	Piece_O,
+	Piece_E = 0, //empty
+	Piece_X = 1,
+	Piece_O = 5,
 } BoardPiece;
 
 
 typedef enum
 {
-	Sate_Playing,
-	Sate_Finished
+	BoardState_Playing,
+	BoardState_Finished
 } BoardState;
+
 
 struct Board
 {
 	BoardPiece pieces[BOARD_SIZE];
 	BoardState state;
-
-
-
-	
+	BoardPiece winner; //no need to make another enum for this, change when OG enum becomes struct;
 };
 
-
-
-
+const char* BoardPiece_ToString(BoardPiece data);
 BoardPtr Board_Create();
 void Board_Print(BoardPtr board);
-void Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data);
+
+int Board_CoordinatesToIndex(int x, int y);
+_Bool SpaceIsFree(BoardPtr board, int x, int y);
+_Bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data);
+
+BoardPiece Board_CheckRow(BoardPtr board, int index);
+BoardPiece Board_CheckCol(BoardPtr board, int index);
+BoardPiece Board_CheckDia(BoardPtr board, _Bool counterDia);
+_Bool Board_CheckBoardState(BoardPtr board); //returns true if winner found
 
 #endif

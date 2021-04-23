@@ -19,24 +19,39 @@ int main()
 	Board_SetPiece(pBoard, -1, 0, Piece_E);
 
 	Board_SetPiece(pBoard, 0, 2, Piece_E);
-	
+	Board_SetPiece(pBoard, 0, 1, Piece_E);
+	Board_SetPiece(pBoard, 1, 2, Piece_E);
+
+
 	Board_Print(pBoard);
 
-
-	while(pBoard->state == Sate_Playing)
-	{
 	
-		int x, y;	
+	//printf("Won player: %s", BoardPiece_ToString(Board_CheckDia(pBoard, false)));
+
+	
+	while (pBoard->state == BoardState_Playing)
+	{
+
+		int x, y;
 		if (GetInput(pBoard, &x, &y) == false)
 		{
-			pBoard->state = Sate_Finished;
+			pBoard->state = BoardState_Finished;
 			break;
 		}
 		system("cls");
-		
-		Board_SetPiece(pBoard, x, y, Piece_X);
-		
-		Board_Print(pBoard);
+
+		if (Board_SetPiece(pBoard, x, y, Piece_X) == false)
+		{
+			Board_Print(pBoard);
+			printf_s("Could not place piece\n");
+		}
+		else 
+			Board_Print(pBoard);
+
+		if (Board_CheckBoardState(pBoard) == true)
+		{
+			printf_s("There is a winner: %s\n", BoardPiece_ToString(pBoard->winner));
+		}
 		
 	}
 
@@ -65,7 +80,7 @@ bool GetInput(BoardPtr pBoard, int* x, int* y)
 	if (CheckCorrectInput(x, y) == false) return false;
 
 
-	while ((*x < 0 || *x > 2 || *y < 0 || *y > 2) && pBoard->state == Sate_Playing)
+	while ((*x < 0 || *x > 2 || *y < 0 || *y > 2) && pBoard->state == BoardState_Playing)
 	{
 
 		printf("x and y need to be between 0 and 2, divided by space: ");
@@ -78,14 +93,16 @@ bool GetInput(BoardPtr pBoard, int* x, int* y)
 bool CheckCorrectInput(int* x, int* y)
 {
 	
-	*x = FLT_MAX;
-	*y = FLT_MAX;
+	*x = (int)FLT_MAX;
+	*y = (int)FLT_MAX;
 	
 	char str[30];
 	gets_s(str, 30);
 	sscanf_s(str, "%i %i", x, y);
+	//printf_s("%i %i", *x, *y);
+	
 
-	if (*x == -1 && *y < 0)
+	if (*x == -1 /*&& *y < 0*/)
 	{
 		return false;
 	}
