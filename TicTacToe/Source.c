@@ -2,7 +2,9 @@
 #include <stdlib.h> //system
 #include <stdbool.h> //bool
 #include <float.h> //FLT_MAX 
+
 #include "board.h"
+#include "AI.h"
 
 bool GetInput(BoardPtr pBoard, int* x, int* y);
 bool CheckCorrectInput(int* x, int* y);
@@ -10,7 +12,6 @@ bool CheckCorrectInput(int* x, int* y);
 int main()
 {
 	printf("Tic Tac Toe start\n");
-
 	// *** 
 	// * Init
 	// ***
@@ -28,6 +29,7 @@ int main()
 	
 	//printf("Won player: %s", BoardPiece_ToString(Board_CheckDia(pBoard, false)));
 
+	TheAlgorithm(pBoard);
 	
 	while (pBoard->state == BoardState_Playing)
 	{
@@ -93,8 +95,8 @@ bool GetInput(BoardPtr pBoard, int* x, int* y)
 bool CheckCorrectInput(int* x, int* y)
 {
 	
-	*x = (int)FLT_MAX;
-	*y = (int)FLT_MAX;
+	*x = 1000;// "Resetting" the input;
+	*y = 1000;// "Resetting" the input;
 	
 	char str[30];
 	gets_s(str, 30);

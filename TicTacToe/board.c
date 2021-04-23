@@ -1,10 +1,11 @@
 #include "board.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-#define BUFFER_COUNT 41
 
+#include "utils.h"
+#define BUFFER_COUNT 41
 
 
 BoardPiece CountTOBoardPiece(int count)
@@ -44,14 +45,36 @@ BoardPtr Board_Create()
 	{
 		board->pieces[i] = Piece_E;
 	}
+
+	//For Testing the AI
+	board->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
+	board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_X;
+	board->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
+	
+	board->pieces[Board_CoordinatesToIndex(2, 0)] = Piece_O;
+	board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+	board->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
+	
+
 	
 	board->state = BoardState_Playing;
 	board->winner = Piece_E;
 	
-
-
-	
 	return board;
+}
+BoardPtr Board_Copy(BoardPtr original)
+{
+	BoardPtr newBoard = Board_Create();
+	if (newBoard == NULL) return NULL;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		newBoard->pieces[i] = original->pieces[i];
+	}
+	
+	newBoard->state = original->state;
+	newBoard->winner = original->winner;
+	
+	return newBoard;
 }
 void Board_Print(BoardPtr board)
 {
@@ -122,6 +145,54 @@ bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
 	}
 	return false;
 
+}
+bool Board_SetPieceWithIndex(BoardPtr board, int index, BoardPiece data)
+{
+	if (index < 0 || index >= BOARD_SIZE)
+	{
+		printf_s("[Board_SetPiece] the value of x and y should be between 0 and 2!\n");
+		return false;
+	}
+
+	if (board->pieces[index] == Piece_E)
+	{
+		board->pieces[index] = data;
+
+		return true;
+	}
+	return false;
+}
+IntArray GetEmptyIndices(BoardPtr board)
+{
+	IntArray arr;
+	arr.count = 0;
+	arr.start = NULL;
+
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (board->pieces[i] == Piece_E)
+			arr.count++;
+	}
+
+	if(arr.count <= 0)
+	{
+		return arr;
+	}
+	
+	arr.start = (int*)malloc(sizeof(int) * arr.count);
+	//Going over the loop again and now filling it
+	int current = 0;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (board->pieces[i] == Piece_E)
+		{
+			arr.start[current] = i;
+			current++;
+		}
+	}
+	
+	
+	return arr;
 }
 
 BoardPiece Board_CheckRow(BoardPtr board, int index)
