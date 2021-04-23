@@ -3,7 +3,8 @@
 
 struct Board;
 
-void TheAlgorithm(struct Board* board);
-int AI_EvaluateBoardState(struct Board* board);
+void Test(struct Board* board);
+int MinMax(struct Board* board, int depth, _Bool isAI);
+int AI_EvaluateBoardState(struct Board* board, _Bool isAI);
 
 #endif

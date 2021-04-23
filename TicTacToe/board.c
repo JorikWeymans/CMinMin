@@ -47,13 +47,22 @@ BoardPtr Board_Create()
 	}
 
 	//For Testing the AI
-	board->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
-	board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_X;
+	//board->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
+	//board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_X;
+	//board->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
+	//
+	//board->pieces[Board_CoordinatesToIndex(2, 0)] = Piece_O;
+	//board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+	//board->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
+
+	board->pieces[Board_CoordinatesToIndex(1, 0)] = Piece_X;
+	board->pieces[Board_CoordinatesToIndex(0, 1)] = Piece_X;
+	board->pieces[Board_CoordinatesToIndex(1, 1)] = Piece_X;
 	board->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
-	
-	board->pieces[Board_CoordinatesToIndex(2, 0)] = Piece_O;
-	board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+
 	board->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
+	board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+	board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_O;
 	
 
 	
@@ -123,10 +132,19 @@ int Board_CoordinatesToIndex(int x, int y)
 	
 	return (x % BOARD_ROW_SIZE) + (BOARD_ROW_SIZE * y);
 }
-bool SpaceIsFree(BoardPtr board, int x, int y)
+bool Board_SpaceIsFree(BoardPtr board, int x, int y)
 {
 	BoardPiece piece = board->pieces[Board_CoordinatesToIndex(x, y)];
 	return (piece == Piece_E) ? true : false;
+}
+bool Board_HasFreeSpace(BoardPtr board)
+{
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (board->pieces[i] == Piece_E)
+			return true;
+	}
+	return false;
 }
 bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
 {
@@ -137,7 +155,7 @@ bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
 		return false;
 	}
 
-	if(SpaceIsFree(board, x, y) == true)
+	if(Board_SpaceIsFree(board, x, y) == true)
 	{
 		board->pieces[index] = data;
 		
@@ -162,8 +180,9 @@ bool Board_SetPieceWithIndex(BoardPtr board, int index, BoardPiece data)
 	}
 	return false;
 }
-IntArray GetEmptyIndices(BoardPtr board)
+IntArray Board_GetEmptyIndices(BoardPtr board)
 {
+
 	IntArray arr;
 	arr.count = 0;
 	arr.start = NULL;
@@ -267,6 +286,13 @@ bool Board_CheckBoardState(BoardPtr board)
 	if (winner != Piece_E)
 	{
 		goto winnerFound;
+	}
+
+	if (Board_HasFreeSpace(board) == false)
+	{
+		board->winner = Piece_E; //E means no winner
+		board->state = BoardState_Finished;
+		return true;
 	}
 
 	

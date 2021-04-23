@@ -1,7 +1,7 @@
 #include <stdio.h> //printf
 #include <stdlib.h> //system
 #include <stdbool.h> //bool
-#include <float.h> //FLT_MAX 
+#include <limits.h>//INT_MAX 
 
 #include "board.h"
 #include "AI.h"
@@ -11,27 +11,23 @@ bool CheckCorrectInput(int* x, int* y);
 
 int main()
 {
+	
 	printf("Tic Tac Toe start\n");
 	// *** 
 	// * Init
 	// ***
 	BoardPtr pBoard = Board_Create();
-	Board_SetPiece(pBoard, 3, 3, Piece_E);
-	Board_SetPiece(pBoard, -1, 0, Piece_E);
-
-	Board_SetPiece(pBoard, 0, 2, Piece_E);
-	Board_SetPiece(pBoard, 0, 1, Piece_E);
-	Board_SetPiece(pBoard, 1, 2, Piece_E);
-
-
+	
 	Board_Print(pBoard);
 
 	
 	//printf("Won player: %s", BoardPiece_ToString(Board_CheckDia(pBoard, false)));
 
-	TheAlgorithm(pBoard);
-	
-	while (pBoard->state == BoardState_Playing)
+	printf("Algo start \n");
+	Test(pBoard);
+
+	printf("Algo Done \n");
+	/*while (pBoard->state == BoardState_Playing)
 	{
 
 		int x, y;
@@ -55,7 +51,7 @@ int main()
 			printf_s("There is a winner: %s\n", BoardPiece_ToString(pBoard->winner));
 		}
 		
-	}
+	}*/
 
 
 	
@@ -95,8 +91,8 @@ bool GetInput(BoardPtr pBoard, int* x, int* y)
 bool CheckCorrectInput(int* x, int* y)
 {
 	
-	*x = 1000;// "Resetting" the input;
-	*y = 1000;// "Resetting" the input;
+	*x = INT_MAX;// "Resetting" the input;
+	*y = INT_MAX;// "Resetting" the input;
 	
 	char str[30];
 	gets_s(str, 30);

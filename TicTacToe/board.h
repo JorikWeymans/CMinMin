@@ -34,11 +34,12 @@ BoardPtr Board_Copy(BoardPtr original);
 void Board_Print(BoardPtr board);
 
 int Board_CoordinatesToIndex(int x, int y);
-_Bool SpaceIsFree(BoardPtr board, int x, int y);
+_Bool Board_SpaceIsFree(BoardPtr board, int x, int y);
+_Bool Board_HasFreeSpace(BoardPtr board);
 _Bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data);
 _Bool Board_SetPieceWithIndex(BoardPtr board, int index, BoardPiece data);
 
-IntArray GetEmptyIndices(BoardPtr board);
+IntArray Board_GetEmptyIndices(BoardPtr board);
 
 BoardPiece Board_CheckRow(BoardPtr board, int index);
 BoardPiece Board_CheckCol(BoardPtr board, int index);
