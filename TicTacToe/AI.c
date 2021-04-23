@@ -11,7 +11,7 @@ void Test(struct Board* board)
 	IntArray arr = Board_GetEmptyIndices(board);
 
 	//Board_SetPieceWithIndex(board, arr.start[0], Piece_O);
-	MinMax(board, 0, true);;
+	int value = MinMax(board, 0, true);;
 
 	
 	//for(int i = 0; i < arr.count; i++)
@@ -37,71 +37,44 @@ int MinMax(struct Board* board, int depth, _Bool isAI)
 
 	
 	
-	IntArray arr = Board_GetEmptyIndices(board);
+	//IntArray arr = Board_GetEmptyIndices(board);
 	if(isAI)
 	{
-		
 		int maxEva = INT_MIN;
 		
-		for (int i = 0; i < arr.count; i++)
+		for (int i = 0; i < BOARD_SIZE; i++)
 		{
-			BoardPtr pCopied = Board_Copy(board);
-			
-			if(Board_SetPieceWithIndex(pCopied, arr.start[i], Piece_O) == true)
+			if(Board_SetPieceWithIndex(board, i, Piece_O) == true)
 			{
-				//maxEva = AI_EvaluateBoardState(copiedState, isAI);
 				printf_s("Depth MAX: %i\n", depth);
 
-				Board_Print(pCopied);
+				Board_Print(board);
 
-				maxEva = max(maxEva, MinMax(pCopied, depth + 1, false));
+				maxEva = max(maxEva, MinMax(board, depth + 1, false));
 
-				Board_SetPieceWithIndex(pCopied, arr.start[i], Piece_E); //Resetting piece
+				Board_SetPieceWithIndex(board, i, Piece_E); //Resetting piece
 			}
-
-			
-
-			
-
-			free(pCopied);
 		}
 		return maxEva;
 	}
 	else
 	{
-		
 		int minEva = INT_MAX;
 
-		for (int i = 0; i < arr.count; i++)
+		for (int i = 0; i < BOARD_SIZE; i++)
 		{
-			BoardPtr copiedState = Board_Copy(board);
-
-			if(Board_SetPieceWithIndex(copiedState, arr.start[i], Piece_X) == true)
+			if(Board_SetPieceWithIndex(board, i, Piece_X) == true)
 			{
-				//minEva = AI_EvaluateBoardState(copiedState, isAI);
-			//printf_s("Depth Min: %i || Evaluated: %i\n", depth, minEva);
 				printf_s("Depth Min: %i\n", depth);
 				Board_Print(board);
-
-				//int eva = MinMax(copiedState, depth - 1, true);
-
-				minEva = min(minEva, MinMax(Board_Copy(copiedState), depth + 1, true));
+				minEva = min(minEva, MinMax(board, depth + 1, true));
 
 
-				Board_SetPieceWithIndex(copiedState, arr.start[i], Piece_E); //Resetting piece
-
-
-				free(copiedState);
+				Board_SetPieceWithIndex(board, i, Piece_E); //Resetting piece
 			}
-			
-			
 		}
-
 		return minEva;
 	}
-	
-
-	free(arr.start);
 }
 
 int AI_EvaluateBoardState(struct Board* board, _Bool isAI)

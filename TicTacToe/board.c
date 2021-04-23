@@ -178,6 +178,12 @@ bool Board_SetPieceWithIndex(BoardPtr board, int index, BoardPiece data)
 
 		return true;
 	}
+	if( data == Piece_E)
+	{
+		board->pieces[index] = data;
+		return true;
+	}
+	
 	return false;
 }
 IntArray Board_GetEmptyIndices(BoardPtr board)
