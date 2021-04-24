@@ -2,7 +2,7 @@
 #include <stdlib.h> //system
 #include <stdbool.h> //bool
 #include <limits.h>//INT_MAX 
-//#include <time.h> // init random
+#include <time.h> // init random
 #include "board.h"
 #include "AI.h"
 
@@ -14,7 +14,7 @@ int main()
 	
 	printf("Tic Tac Toe start\n");
 
-	//srand(time(NULL));
+	srand(time(NULL));
 
 	
 	// *** 
@@ -46,7 +46,7 @@ int main()
 			Board_Print(pBoard);
 			printf_s("Could not place piece\n");
 		}
-		else
+		else if(Board_CheckBoardState(pBoard) != true)
 		{
 			// AI
 			Board_Print(pBoard);
@@ -58,6 +58,7 @@ int main()
 
 		if (Board_CheckBoardState(pBoard) == true)
 		{
+			Board_Print(pBoard);
 			printf_s("There is a winner: %s\n", BoardPiece_ToString(pBoard->winner));
 		}
 		
