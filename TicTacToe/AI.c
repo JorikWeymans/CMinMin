@@ -81,14 +81,14 @@ static bool AI_MakeAMove_MiniMax(struct AI* pAI, struct Board* board)
 	}
 
 
-	// *** Minmax
+	// *** The algorithm
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
 		if (pTestingBoard->pieces[i] == Piece_E)
 		{
 			pTestingBoard->pieces[i] = pAI->usingPiece;
 
-			int  thisVal = AI_MiniMax(pAI, pTestingBoard, 0, false);
+			int thisVal = AI_MiniMax(pAI, pTestingBoard, 0, false);
 
 			pTestingBoard->pieces[i] = Piece_E;
 
