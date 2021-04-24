@@ -2,7 +2,7 @@
 #include <stdlib.h> //system
 #include <stdbool.h> //bool
 #include <limits.h>//INT_MAX 
-
+//#include <time.h> // init random
 #include "board.h"
 #include "AI.h"
 
@@ -13,13 +13,23 @@ int main()
 {
 	
 	printf("Tic Tac Toe start\n");
+
+	//srand(time(NULL));
+
+	
 	// *** 
-	// * Init
+	// * alloc resources
 	// ***
 	struct Board* pBoard = Board_Create();
-	
+	struct AI* pAI = AI_Create(Piece_O, AIType_Random);
+	enum BoardPiece playerPiece = Piece_X;
+
+
+
+	// *** 
+	// * Game Loop
+	// ***
 	Board_Print(pBoard);
-	
 	while (pBoard->state == BoardState_Playing)
 	{
 
@@ -31,7 +41,7 @@ int main()
 		}
 		system("cls");
 		
-		if (Board_SetPiece(pBoard, x, y, Piece_X) == false)
+		if (Board_SetPiece(pBoard, x, y, playerPiece) == false)
 		{
 			Board_Print(pBoard);
 			printf_s("Could not place piece\n");
@@ -41,7 +51,7 @@ int main()
 			// AI
 			Board_Print(pBoard);
 			printf_s("AI move\n");
-			AI_DoMove(pBoard);
+			AI_MakeAMove(pAI, pBoard);
 			Board_Print(pBoard);
 		}
 			
@@ -52,8 +62,6 @@ int main()
 		}
 		
 	}
-
-
 	
 	printf_s("Game over\n");
 
@@ -61,7 +69,7 @@ int main()
 	//* Releasing resources
 	//***
 	free(pBoard);
-
+	free(pAI);
 	
 	system("Pause");
 	

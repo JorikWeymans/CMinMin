@@ -7,7 +7,7 @@
 #include "utils.h"
 #define BUFFER_COUNT 41
 
-const char* BoardPiece_ToString(BoardPiece data)
+const char* BoardPiece_ToString(enum BoardPiece data)
 {
 	switch (data)
 	{
@@ -65,7 +65,13 @@ struct Board* Board_Create()
 	//pBoard->pieces[0] = Piece_E; pBoard->pieces[1] = Piece_E; pBoard->pieces[2] = Piece_E;
 	//pBoard->pieces[3] = Piece_E; pBoard->pieces[4] = Piece_O; pBoard->pieces[5] = Piece_E;
 	//pBoard->pieces[6] = Piece_X; pBoard->pieces[7] = Piece_X; pBoard->pieces[8] = Piece_E;
+
+	//pBoard->pieces[0] = Piece_O; pBoard->pieces[1] = Piece_X; pBoard->pieces[2] = Piece_O;
+	//pBoard->pieces[3] = Piece_O; pBoard->pieces[4] = Piece_X; pBoard->pieces[5] = Piece_E;
+	//pBoard->pieces[6] = Piece_X; pBoard->pieces[7] = Piece_O; pBoard->pieces[8] = Piece_E;
 	*/
+
+
 	
 	pBoard->state = BoardState_Playing;
 	pBoard->winner = Piece_E;
@@ -135,7 +141,7 @@ int Board_CoordinatesToIndex(int x, int y)
 }
 bool Board_SpaceIsFree(struct Board* pBoard, int x, int y)
 {
-	BoardPiece piece = pBoard->pieces[Board_CoordinatesToIndex(x, y)];
+	enum BoardPiece piece = pBoard->pieces[Board_CoordinatesToIndex(x, y)];
 	return (piece == Piece_E) ? true : false;
 }
 bool Board_HasFreeSpace(struct Board* pBoard)
@@ -147,7 +153,7 @@ bool Board_HasFreeSpace(struct Board* pBoard)
 	}
 	return false;
 }
-bool Board_SetPiece(struct Board* pBoard, int x, int y, BoardPiece data)
+bool Board_SetPiece(struct Board* pBoard, int x, int y, enum BoardPiece data)
 {
 	int index = Board_CoordinatesToIndex(x, y);
 	if(index == -1)
@@ -165,7 +171,7 @@ bool Board_SetPiece(struct Board* pBoard, int x, int y, BoardPiece data)
 	return false;
 
 }
-bool Board_SetPieceWithIndex(struct Board* pBoard, int index, BoardPiece data)
+bool Board_SetPieceWithIndex(struct Board* pBoard, int index, enum BoardPiece data)
 {
 	if (index < 0 || index >= BOARD_SIZE)
 	{
@@ -224,8 +230,18 @@ IntArray Board_GetEmptyIndices(struct Board* pBoard)
 	
 	return arr;
 }
+int Board_GetNumberOfUsedSpots(struct Board* pBoard)
+{
+	int count = 0;
 
-BoardPiece Board_CheckRow(struct Board* pBoard, int index)
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		if (pBoard->pieces[i] != Piece_E)
+			count++;
+	}
+	return count;
+}
+enum BoardPiece Board_CheckRow(struct Board* pBoard, int index)
 {
 	if (pBoard->pieces[0 + (index * BOARD_ROW_SIZE)] == pBoard->pieces[1 + (index * BOARD_ROW_SIZE)]
 		&& pBoard->pieces[0 + (index * BOARD_ROW_SIZE)] == pBoard->pieces[2 + (index * BOARD_ROW_SIZE)])
@@ -235,7 +251,7 @@ BoardPiece Board_CheckRow(struct Board* pBoard, int index)
 
 	return Piece_E;
 }
-BoardPiece Board_CheckCol(struct Board* pBoard, int index)
+enum BoardPiece Board_CheckCol(struct Board* pBoard, int index)
 {
 	if (pBoard->pieces[0 + (index % BOARD_ROW_SIZE)] == pBoard->pieces[3 + (index % BOARD_ROW_SIZE)]
 		&& pBoard->pieces[0 + (index % BOARD_ROW_SIZE)] == pBoard->pieces[6 + (index % BOARD_ROW_SIZE)])
@@ -246,10 +262,8 @@ BoardPiece Board_CheckCol(struct Board* pBoard, int index)
 	return Piece_E;
 
 }
-BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
+enum BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
 {
-	int count = 0;
-	
 	if(counterDia == false)
 	{
 
@@ -272,7 +286,7 @@ BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
 }
 bool Board_CheckBoardState(struct Board* pBoard)
 {
-	BoardPiece winner = Piece_E;
+	enum BoardPiece winner = Piece_E;
 
 	for(int i = 0; i < BOARD_ROW_SIZE; i++)
 	{

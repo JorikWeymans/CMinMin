@@ -2,9 +2,33 @@
 #define AI_h
 
 struct Board;
+enum BoardPiece;
 
-_Bool AI_DoMove(struct Board* board);
-static int AI_MiniMax(struct Board* board, int depth, _Bool isAI);
-static int AI_EvaluateBoardState(struct Board* board);
+enum AIType
+{
+	AIType_Random,
+	AIType_MiniMax,
+};
+struct AI
+{
+	enum BoardPiece usingPiece;
+	enum BoardPiece opponentsPiece;
+	enum AIType type;
+};
+
+
+
+struct AI* AI_Create(enum BoardPiece pieceToUse, enum AIType type);
+
+
+_Bool AI_MakeAMove(struct AI* pAI, struct Board* pBoard);
+static _Bool AI_MakeAMove_Random(struct AI* pAI, struct Board* pBoard);
+static _Bool AI_MakeAMove_MiniMax(struct AI* pAI, struct Board* board);
+
+static int AI_MiniMax(struct AI* pAI, struct Board* board, int depth, _Bool isAI);
+static int AI_EvaluateBoardState(struct AI* pAI, struct Board* pBoard);
+
+
+
 
 #endif
