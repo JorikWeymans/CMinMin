@@ -41,7 +41,7 @@ int main()
 			// AI
 			Board_Print(pBoard);
 			printf_s("AI move\n");
-			DoMove(pBoard);
+			AI_DoMove(pBoard);
 			Board_Print(pBoard);
 		}
 			
