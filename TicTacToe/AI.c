@@ -1,58 +1,63 @@
 #include "AI.h"
 #include <limits.h>
 #include "board.h"
-#include "utils.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
 
-void Test(struct Board* board)
+void AI_DoMove(struct Board* board)
 {
-	IntArray arr = Board_GetEmptyIndices(board);
+	int bestVal = INT_MIN;
+	int bestMove = -1;
 
-	//Board_SetPieceWithIndex(board, arr.start[0], Piece_O);
-	int value = MinMax(board, 0, true);;
 
+	//coping the board once so that we don't change any unwanted board settings like board::state
+	struct Board* pTestingBoard = Board_Copy(board);
 	
-	//for(int i = 0; i < arr.count; i++)
-	//{
-	//	Board_SetPieceWithIndex(board, arr.start[i], Piece_O);
-	//	Board_Print(board);
-	//	int value = MinMax(board, 3, true);
-	//	printf_s("value previous board: %i", value);
-	//}
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		if(pTestingBoard->pieces[i] == Piece_E)
+		{
+			pTestingBoard->pieces[i] = Piece_O;
+
+			int  thisVal = AI_MiniMax(pTestingBoard, 0, false);
+			
+			pTestingBoard->pieces[i] = Piece_E;
+
+			if(thisVal > bestVal)
+			{
+				bestMove = i;
+				bestVal = thisVal;
+			}
+		}
+	}
+	free(pTestingBoard);
+	Board_SetPieceWithIndex(board, bestMove, Piece_O);
 	
 }
-int MinMax(struct Board* board, int depth, _Bool isAI)
+
+static int AI_MiniMax(struct Board* board, int depth, _Bool isAI)
 {
-	int score = AI_EvaluateBoardState(board, isAI);
+	int score = AI_EvaluateBoardState(board);
 	
-	if (score == -100 || score == 100)
+	if (score == 100 || score == -100)
 		return score;
 	
 	if  (Board_HasFreeSpace(board) == false)
 	{
 		return 0;
 	}
-
 	
-	
-	//IntArray arr = Board_GetEmptyIndices(board);
 	if(isAI)
 	{
 		int maxEva = INT_MIN;
 		
 		for (int i = 0; i < BOARD_SIZE; i++)
 		{
-			if(Board_SetPieceWithIndex(board, i, Piece_O) == true)
+			if(Board_SetPieceWithIndex(board, i, Piece_O))
 			{
-				printf_s("Depth MAX: %i\n", depth);
-
-				Board_Print(board);
-
-				maxEva = max(maxEva, MinMax(board, depth + 1, false));
-
-				Board_SetPieceWithIndex(board, i, Piece_E); //Resetting piece
+				maxEva = max(maxEva, AI_MiniMax(board, depth + 1, false));
+				Board_ClearPieceWithIndex(board, i);
 			}
 		}
 		return maxEva;
@@ -63,29 +68,26 @@ int MinMax(struct Board* board, int depth, _Bool isAI)
 
 		for (int i = 0; i < BOARD_SIZE; i++)
 		{
-			if(Board_SetPieceWithIndex(board, i, Piece_X) == true)
+			if (Board_SetPieceWithIndex(board, i, Piece_X))
 			{
-				printf_s("Depth Min: %i\n", depth);
-				Board_Print(board);
-				minEva = min(minEva, MinMax(board, depth + 1, true));
-
-
-				Board_SetPieceWithIndex(board, i, Piece_E); //Resetting piece
+				minEva = min(minEva, AI_MiniMax(board, depth + 1, true));
+				Board_ClearPieceWithIndex(board, i);
 			}
 		}
 		return minEva;
 	}
 }
 
-int AI_EvaluateBoardState(struct Board* board, _Bool isAI)
+static int AI_EvaluateBoardState(struct Board* board)
 {
 	Board_CheckBoardState(board);
 	switch (board->winner)
 	{
 		case Piece_X:
-		return (isAI == true) ? 100 : -100;
+			return -100;
 		case Piece_O:
-		return (isAI == true) ? 100 : -100;
+			return 100;
 		default:
-		return 0; }
+			return 0;
+	}
 }

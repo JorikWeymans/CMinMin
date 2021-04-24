@@ -8,7 +8,7 @@
 #define BUFFER_COUNT 41
 
 
-BoardPiece CountTOBoardPiece(int count)
+BoardPiece CountToBoardPiece(int count)
 {
 	if (count == Piece_X * BOARD_ROW_SIZE)
 	{
@@ -34,46 +34,63 @@ const char* BoardPiece_ToString(BoardPiece data)
 
 	return "_";
 }
-BoardPtr Board_Create()
+struct Board* Board_Create()
 {
-	BoardPtr board = (struct Board*)malloc(sizeof(struct Board));
+	struct Board* pBoard = (struct Board*)malloc(sizeof(struct Board));
 
-	if(board == NULL) return NULL;
+	if(pBoard == NULL) return NULL;
 
 
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		board->pieces[i] = Piece_E;
+		pBoard->pieces[i] = Piece_E;
 	}
-
+	
+	/* Testing pBoards
 	//For Testing the AI
-	//board->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
-	//board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_X;
-	//board->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
 	//
-	//board->pieces[Board_CoordinatesToIndex(2, 0)] = Piece_O;
-	//board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
-	//board->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(2, 0)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
 
-	board->pieces[Board_CoordinatesToIndex(1, 0)] = Piece_X;
-	board->pieces[Board_CoordinatesToIndex(0, 1)] = Piece_X;
-	board->pieces[Board_CoordinatesToIndex(1, 1)] = Piece_X;
-	board->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(0, 0)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(0, 1)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(1, 1)] = Piece_X;
+	//pBoard->pieces[Board_CoordinatesToIndex(2, 2)] = Piece_X;
 
-	board->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
-	board->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
-	board->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(0, 2)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(1, 2)] = Piece_O;
+	//pBoard->pieces[Board_CoordinatesToIndex(2, 1)] = Piece_O;	
 	
+	//pBoard->pieces[0] = Piece_X; pBoard->pieces[1] = Piece_O; pBoard->pieces[2] = Piece_X;
+	//pBoard->pieces[3] = Piece_O; pBoard->pieces[4] = Piece_O; pBoard->pieces[5] = Piece_X;
+	//pBoard->pieces[6] = Piece_E; pBoard->pieces[7] = Piece_E; pBoard->pieces[8] = Piece_E;
+	
+	//pBoard->pieces[0] = Piece_O; pBoard->pieces[1] = Piece_X; pBoard->pieces[2] = Piece_O;
+	//pBoard->pieces[3] = Piece_X; pBoard->pieces[4] = Piece_X; pBoard->pieces[5] = Piece_O;
+	//pBoard->pieces[6] = Piece_E; pBoard->pieces[7] = Piece_E; pBoard->pieces[8] = Piece_E;
+	//
 
+	//pBoard->pieces[0] = Piece_E; pBoard->pieces[1] = Piece_E; pBoard->pieces[2] = Piece_E;
+	//pBoard->pieces[3] = Piece_X; pBoard->pieces[4] = Piece_O; pBoard->pieces[5] = Piece_E;
+	//pBoard->pieces[6] = Piece_X; pBoard->pieces[7] = Piece_O; pBoard->pieces[8] = Piece_X;
+
+	//pBoard->pieces[0] = Piece_E; pBoard->pieces[1] = Piece_E; pBoard->pieces[2] = Piece_E;
+	//pBoard->pieces[3] = Piece_E; pBoard->pieces[4] = Piece_O; pBoard->pieces[5] = Piece_E;
+	//pBoard->pieces[6] = Piece_X; pBoard->pieces[7] = Piece_X; pBoard->pieces[8] = Piece_E;
+	*/
 	
-	board->state = BoardState_Playing;
-	board->winner = Piece_E;
+	pBoard->state = BoardState_Playing;
+	pBoard->winner = Piece_E;
 	
-	return board;
+	return pBoard;
 }
-BoardPtr Board_Copy(BoardPtr original)
+struct Board* Board_Copy(struct Board const * original)
 {
-	BoardPtr newBoard = Board_Create();
+	struct Board* newBoard = Board_Create();
 	if (newBoard == NULL) return NULL;
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -85,17 +102,17 @@ BoardPtr Board_Copy(BoardPtr original)
 	
 	return newBoard;
 }
-void Board_Print(BoardPtr board)
+void Board_Print(struct Board* pBoard)
 {
 	char buffer[BUFFER_COUNT +1];
 	
-	int bufferPos = sprintf_s(buffer, BUFFER_COUNT, "   0 2 3\n0 |");
+	int bufferPos = sprintf_s(buffer, BUFFER_COUNT, "   0 1 2\n0 |");
 	
 	int rowCount = 0;
 	
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		switch (board->pieces[i])
+		switch (pBoard->pieces[i])
 		{
 		case Piece_E:
 			bufferPos += sprintf_s(buffer + bufferPos, BUFFER_COUNT - bufferPos, " |");
@@ -132,21 +149,21 @@ int Board_CoordinatesToIndex(int x, int y)
 	
 	return (x % BOARD_ROW_SIZE) + (BOARD_ROW_SIZE * y);
 }
-bool Board_SpaceIsFree(BoardPtr board, int x, int y)
+bool Board_SpaceIsFree(struct Board* pBoard, int x, int y)
 {
-	BoardPiece piece = board->pieces[Board_CoordinatesToIndex(x, y)];
+	BoardPiece piece = pBoard->pieces[Board_CoordinatesToIndex(x, y)];
 	return (piece == Piece_E) ? true : false;
 }
-bool Board_HasFreeSpace(BoardPtr board)
+bool Board_HasFreeSpace(struct Board* pBoard)
 {
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		if (board->pieces[i] == Piece_E)
+		if (pBoard->pieces[i] == Piece_E)
 			return true;
 	}
 	return false;
 }
-bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
+bool Board_SetPiece(struct Board* pBoard, int x, int y, BoardPiece data)
 {
 	int index = Board_CoordinatesToIndex(x, y);
 	if(index == -1)
@@ -155,38 +172,42 @@ bool Board_SetPiece(BoardPtr board, int x, int y, BoardPiece data)
 		return false;
 	}
 
-	if(Board_SpaceIsFree(board, x, y) == true)
+	if(Board_SpaceIsFree(pBoard, x, y) == true)
 	{
-		board->pieces[index] = data;
+		pBoard->pieces[index] = data;
 		
 		return true;
 	}
 	return false;
 
 }
-bool Board_SetPieceWithIndex(BoardPtr board, int index, BoardPiece data)
+bool Board_SetPieceWithIndex(struct Board* pBoard, int index, BoardPiece data)
 {
 	if (index < 0 || index >= BOARD_SIZE)
 	{
-		printf_s("[Board_SetPiece] the value of x and y should be between 0 and 2!\n");
+		printf_s("[Board_SetPieceWithIndex] the value of x and y should be between 0 and 2!\n");
 		return false;
 	}
 
-	if (board->pieces[index] == Piece_E)
+	if (pBoard->pieces[index] == Piece_E)
 	{
-		board->pieces[index] = data;
+		pBoard->pieces[index] = data;
 
 		return true;
 	}
 	if( data == Piece_E)
 	{
-		board->pieces[index] = data;
-		return true;
+		printf_s("[Board_SetPieceWithIndex] Use ClearPiece if you use Piece_E");
+		return false;
 	}
 	
 	return false;
 }
-IntArray Board_GetEmptyIndices(BoardPtr board)
+void Board_ClearPieceWithIndex(struct Board* pBoard, int index)
+{
+	pBoard->pieces[index] = Piece_E;
+}
+IntArray Board_GetEmptyIndices(struct Board* pBoard)
 {
 
 	IntArray arr;
@@ -195,7 +216,7 @@ IntArray Board_GetEmptyIndices(BoardPtr board)
 
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
-		if (board->pieces[i] == Piece_E)
+		if (pBoard->pieces[i] == Piece_E)
 			arr.count++;
 	}
 
@@ -209,7 +230,7 @@ IntArray Board_GetEmptyIndices(BoardPtr board)
 	int current = 0;
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if (board->pieces[i] == Piece_E)
+		if (pBoard->pieces[i] == Piece_E)
 		{
 			arr.start[current] = i;
 			current++;
@@ -220,60 +241,60 @@ IntArray Board_GetEmptyIndices(BoardPtr board)
 	return arr;
 }
 
-BoardPiece Board_CheckRow(BoardPtr board, int index)
+BoardPiece Board_CheckRow(struct Board* pBoard, int index)
 {
 	int count = 0;
 	for(int i = 0; i < BOARD_ROW_SIZE; i++)
 	{
-		//printf_s("The piece is: %s\n", BoardPiece_ToString(board->pieces[thisIndex]));
-		count += board->pieces[Board_CoordinatesToIndex(i, index)];
+		//printf_s("The piece is: %s\n", BoardPiece_ToString(pBoard->pieces[thisIndex]));
+		count += pBoard->pieces[Board_CoordinatesToIndex(i, index)];
 		
 	}
-	return CountTOBoardPiece(count);
+	return CountToBoardPiece(count);
 }
-BoardPiece Board_CheckCol(BoardPtr board, int index)
+BoardPiece Board_CheckCol(struct Board* pBoard, int index)
 {
 	int count = 0;
 	for (int i = 0; i < BOARD_ROW_SIZE; i++)
 	{
-		//printf_s("The piece is: %s\n", BoardPiece_ToString(board->pieces[thisIndex]));
-		count += board->pieces[Board_CoordinatesToIndex(index, i)];
+		//printf_s("The piece is: %s\n", BoardPiece_ToString(pBoard->pieces[thisIndex]));
+		count += pBoard->pieces[Board_CoordinatesToIndex(index, i)];
 	}
-	return CountTOBoardPiece(count);
+	return CountToBoardPiece(count);
 
 }
-BoardPiece Board_CheckDia(BoardPtr board, bool counterDia)
+BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
 {
 	int count = 0;
 	
 	if(counterDia == false)
 	{
-		count += board->pieces[Board_CoordinatesToIndex(0, 0)];
-		count += board->pieces[Board_CoordinatesToIndex(1, 1)];
-		count += board->pieces[Board_CoordinatesToIndex(2, 2)];
+		count += pBoard->pieces[Board_CoordinatesToIndex(0, 0)];
+		count += pBoard->pieces[Board_CoordinatesToIndex(1, 1)];
+		count += pBoard->pieces[Board_CoordinatesToIndex(2, 2)];
 
-		return CountTOBoardPiece(count);
+		return CountToBoardPiece(count);
 
 	}
 
-	count += board->pieces[Board_CoordinatesToIndex(2, 0)];
-	count += board->pieces[Board_CoordinatesToIndex(1, 1)];
-	count += board->pieces[Board_CoordinatesToIndex(2, 0)];
+	count += pBoard->pieces[Board_CoordinatesToIndex(2, 0)];
+	count += pBoard->pieces[Board_CoordinatesToIndex(1, 1)];
+	count += pBoard->pieces[Board_CoordinatesToIndex(0, 2)];
 	
-	return CountTOBoardPiece(count);
+	return CountToBoardPiece(count);
 }
-bool Board_CheckBoardState(BoardPtr board)
+bool Board_CheckBoardState(struct Board* pBoard)
 {
 	BoardPiece winner = Piece_E;
 
 	for(int i = 0; i < BOARD_ROW_SIZE; i++)
 	{
-		winner = Board_CheckRow(board, i);
+		winner = Board_CheckRow(pBoard, i);
 		if(winner != Piece_E)
 		{
 			goto winnerFound;
 		}
-		winner = Board_CheckCol(board, i);
+		winner = Board_CheckCol(pBoard, i);
 		if (winner != Piece_E)
 		{
 			goto winnerFound;
@@ -281,33 +302,33 @@ bool Board_CheckBoardState(BoardPtr board)
 		
 	}
 
-	winner = Board_CheckDia(board, false);
+	winner = Board_CheckDia(pBoard, false);
 	if (winner != Piece_E)
 	{
 		goto winnerFound;
 
 	}
 
-	winner = Board_CheckDia(board, true);
+	winner = Board_CheckDia(pBoard, true);
 	if (winner != Piece_E)
 	{
 		goto winnerFound;
 	}
 
-	if (Board_HasFreeSpace(board) == false)
+	if (Board_HasFreeSpace(pBoard) == false)
 	{
-		board->winner = Piece_E; //E means no winner
-		board->state = BoardState_Finished;
+		pBoard->winner = Piece_E; //E means no winner
+		pBoard->state = BoardState_Finished;
 		return true;
 	}
 
-	
+	pBoard->winner = Piece_E; // make sure there is no winner when no one has won.
 	return false;
 	
 	winnerFound:
 	{
-		board->winner = winner;
-		board->state = BoardState_Finished;
+		pBoard->winner = winner;
+		pBoard->state = BoardState_Finished;
 		return true;
 	}
 	

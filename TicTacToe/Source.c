@@ -6,7 +6,7 @@
 #include "board.h"
 #include "AI.h"
 
-bool GetInput(BoardPtr pBoard, int* x, int* y);
+bool GetInput(struct Board* pBoard, int* x, int* y);
 bool CheckCorrectInput(int* x, int* y);
 
 int main()
@@ -16,18 +16,11 @@ int main()
 	// *** 
 	// * Init
 	// ***
-	BoardPtr pBoard = Board_Create();
+	struct Board* pBoard = Board_Create();
 	
 	Board_Print(pBoard);
-
 	
-	//printf("Won player: %s", BoardPiece_ToString(Board_CheckDia(pBoard, false)));
-
-	printf("Algo start \n");
-	Test(pBoard);
-
-	printf("Algo Done \n");
-	/*while (pBoard->state == BoardState_Playing)
+	while (pBoard->state == BoardState_Playing)
 	{
 
 		int x, y;
@@ -37,21 +30,28 @@ int main()
 			break;
 		}
 		system("cls");
-
+		
 		if (Board_SetPiece(pBoard, x, y, Piece_X) == false)
 		{
 			Board_Print(pBoard);
 			printf_s("Could not place piece\n");
 		}
-		else 
+		else
+		{
+			// AI
 			Board_Print(pBoard);
+			printf_s("AI move\n");
+			DoMove(pBoard);
+			Board_Print(pBoard);
+		}
+			
 
 		if (Board_CheckBoardState(pBoard) == true)
 		{
 			printf_s("There is a winner: %s\n", BoardPiece_ToString(pBoard->winner));
 		}
 		
-	}*/
+	}
 
 
 	
@@ -68,7 +68,7 @@ int main()
 	return 0;
 }
 
-bool GetInput(BoardPtr pBoard, int* x, int* y)
+bool GetInput(struct Board* pBoard, int* x, int* y)
 {
 	// *** 
 	// * Input

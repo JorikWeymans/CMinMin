@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 
-void main()
-{
-	printf("Test\n");
-	system("Pause");
-}
+//void main()
+//{
+//	printf("Test\n");
+//	system("Pause");
+//}
