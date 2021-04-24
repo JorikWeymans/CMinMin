@@ -11,14 +11,19 @@ struct AI* AI_Create(enum BoardPiece pieceToUse, enum AIType type)
 	struct AI* pAI = (struct AI*)malloc(sizeof(struct AI));
 	if (pAI == NULL) return NULL;
 
-	pAI->usingPiece = pieceToUse;
-	pAI->opponentsPiece = (pieceToUse == Piece_O) ? Piece_X : Piece_O;
+	AI_SetPieceToUse(pAI, pieceToUse);
 
 	pAI->type = type;
 	
 	return pAI;
 	
 }
+void AI_SetPieceToUse(struct AI* pAI, enum BoardPiece pieceToUse)
+{
+	pAI->usingPiece = pieceToUse;
+	pAI->opponentsPiece = (pieceToUse == Piece_O) ? Piece_X : Piece_O;
+}
+
 bool AI_MakeAMove(struct AI* pAI, struct Board* pBoard)
 {
 	switch (pAI->type)

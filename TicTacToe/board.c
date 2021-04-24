@@ -23,12 +23,7 @@ struct Board* Board_Create()
 	struct Board* pBoard = (struct Board*)malloc(sizeof(struct Board));
 
 	if(pBoard == NULL) return NULL;
-
-
-	for(int i = 0; i < BOARD_SIZE; i++)
-	{
-		pBoard->pieces[i] = Piece_E;
-	}
+	Board_Reset(pBoard);
 	
 	/* Testing pBoards
 	//For Testing the AI
@@ -72,9 +67,6 @@ struct Board* Board_Create()
 	*/
 
 
-	
-	pBoard->state = BoardState_Playing;
-	pBoard->winner = Piece_E;
 	
 	return pBoard;
 }
@@ -129,7 +121,15 @@ void Board_Print(struct Board* pBoard)
 	
 	
 }
-
+void Board_Reset(struct Board* pBoard)
+{
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		pBoard->pieces[i] = Piece_E;
+	}
+	pBoard->state = BoardState_Playing;
+	pBoard->winner = Piece_E;
+}
 int Board_CoordinatesToIndex(int x, int y)
 {
 	if (x > 2 || x < 0 || y > 2 || y < 0)

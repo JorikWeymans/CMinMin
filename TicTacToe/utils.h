@@ -8,5 +8,7 @@ typedef struct
 } IntArray;
 
 
+int Input_GetInt();
+
 
 #endif

@@ -15,16 +15,16 @@ enum BoardPiece
 	Piece_O 
 } ;
 
-typedef enum
+enum BoardState
 {
 	BoardState_Playing,
 	BoardState_Finished
-} BoardState;
+};
 
 struct Board
 {
 	enum BoardPiece pieces[BOARD_SIZE];
-	BoardState state;
+	enum BoardState state;
 	enum BoardPiece winner; //no need to make another enum for this, change when OG enum becomes struct;
  };
 
@@ -32,6 +32,7 @@ const char* BoardPiece_ToString(enum BoardPiece data);
 struct Board* Board_Create();
 struct Board* Board_Copy(struct Board const * original);
 void Board_Print(struct Board* pBoard);
+void Board_Reset(struct Board* pBoard);
 
 int   Board_CoordinatesToIndex(int x, int y);
 _Bool Board_SpaceIsFree(struct Board* pBoard, int x, int y);

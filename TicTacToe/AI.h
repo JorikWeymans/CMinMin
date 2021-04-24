@@ -16,10 +16,8 @@ struct AI
 	enum AIType type;
 };
 
-
-
 struct AI* AI_Create(enum BoardPiece pieceToUse, enum AIType type);
-
+void AI_SetPieceToUse(struct AI* pAI, enum BoardPiece pieceToUse);
 
 _Bool AI_MakeAMove(struct AI* pAI, struct Board* pBoard);
 static _Bool AI_MakeAMove_Random(struct AI* pAI, struct Board* pBoard);
