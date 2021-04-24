@@ -7,22 +7,6 @@
 #include "utils.h"
 #define BUFFER_COUNT 41
 
-
-BoardPiece CountToBoardPiece(int count)
-{
-	if (count == Piece_X * BOARD_ROW_SIZE)
-	{
-		return Piece_X;
-	}
-
-	if (count == Piece_O * BOARD_ROW_SIZE)
-	{
-		return Piece_O;
-	}
-
-	return Piece_E;
-}
-
 const char* BoardPiece_ToString(BoardPiece data)
 {
 	switch (data)
@@ -243,24 +227,23 @@ IntArray Board_GetEmptyIndices(struct Board* pBoard)
 
 BoardPiece Board_CheckRow(struct Board* pBoard, int index)
 {
-	int count = 0;
-	for(int i = 0; i < BOARD_ROW_SIZE; i++)
+	if (pBoard->pieces[0 + (index * BOARD_ROW_SIZE)] == pBoard->pieces[1 + (index * BOARD_ROW_SIZE)]
+		&& pBoard->pieces[0 + (index * BOARD_ROW_SIZE)] == pBoard->pieces[2 + (index * BOARD_ROW_SIZE)])
 	{
-		//printf_s("The piece is: %s\n", BoardPiece_ToString(pBoard->pieces[thisIndex]));
-		count += pBoard->pieces[Board_CoordinatesToIndex(i, index)];
-		
+		return pBoard->pieces[0 + (index * BOARD_ROW_SIZE)];
 	}
-	return CountToBoardPiece(count);
+
+	return Piece_E;
 }
 BoardPiece Board_CheckCol(struct Board* pBoard, int index)
 {
-	int count = 0;
-	for (int i = 0; i < BOARD_ROW_SIZE; i++)
+	if (pBoard->pieces[0 + (index % BOARD_ROW_SIZE)] == pBoard->pieces[3 + (index % BOARD_ROW_SIZE)]
+		&& pBoard->pieces[0 + (index % BOARD_ROW_SIZE)] == pBoard->pieces[6 + (index % BOARD_ROW_SIZE)])
 	{
-		//printf_s("The piece is: %s\n", BoardPiece_ToString(pBoard->pieces[thisIndex]));
-		count += pBoard->pieces[Board_CoordinatesToIndex(index, i)];
+		return pBoard->pieces[0 + (index % BOARD_ROW_SIZE)];
 	}
-	return CountToBoardPiece(count);
+
+	return Piece_E;
 
 }
 BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
@@ -269,19 +252,23 @@ BoardPiece Board_CheckDia(struct Board* pBoard, bool counterDia)
 	
 	if(counterDia == false)
 	{
-		count += pBoard->pieces[Board_CoordinatesToIndex(0, 0)];
-		count += pBoard->pieces[Board_CoordinatesToIndex(1, 1)];
-		count += pBoard->pieces[Board_CoordinatesToIndex(2, 2)];
 
-		return CountToBoardPiece(count);
-
+		if (pBoard->pieces[0] == pBoard->pieces[4]
+			&& pBoard->pieces[0 ] == pBoard->pieces[8])
+		{
+			return pBoard->pieces[0];
+		}
 	}
-
-	count += pBoard->pieces[Board_CoordinatesToIndex(2, 0)];
-	count += pBoard->pieces[Board_CoordinatesToIndex(1, 1)];
-	count += pBoard->pieces[Board_CoordinatesToIndex(0, 2)];
+	else
+	{
+		if (pBoard->pieces[2] == pBoard->pieces[4]
+			&& pBoard->pieces[2] == pBoard->pieces[6])
+		{
+			return pBoard->pieces[2];
+		}
+	}
+	return Piece_E;
 	
-	return CountToBoardPiece(count);
 }
 bool Board_CheckBoardState(struct Board* pBoard)
 {

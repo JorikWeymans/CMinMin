@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void AI_DoMove(struct Board* board)
+bool AI_DoMove(struct Board* board)
 {
 	int bestVal = INT_MIN;
 	int bestMove = -1;
@@ -14,25 +14,32 @@ void AI_DoMove(struct Board* board)
 	//coping the board once so that we don't change any unwanted board settings like board::state
 	struct Board* pTestingBoard = Board_Copy(board);
 	
-	for(int i = 0; i < BOARD_SIZE; i++)
+	for (int i = 0; i < BOARD_SIZE; i++)
 	{
-		if(pTestingBoard->pieces[i] == Piece_E)
+		if (pTestingBoard->pieces[i] == Piece_E)
 		{
 			pTestingBoard->pieces[i] = Piece_O;
 
 			int  thisVal = AI_MiniMax(pTestingBoard, 0, false);
-			
+
 			pTestingBoard->pieces[i] = Piece_E;
 
-			if(thisVal > bestVal)
+			if (thisVal > bestVal)
 			{
 				bestMove = i;
 				bestVal = thisVal;
 			}
 		}
 	}
+	
 	free(pTestingBoard);
-	Board_SetPieceWithIndex(board, bestMove, Piece_O);
+
+	if(bestMove != -1)
+	{
+		Board_SetPieceWithIndex(board, bestMove, Piece_O);
+		return true;
+	}
+	return false;
 	
 }
 
