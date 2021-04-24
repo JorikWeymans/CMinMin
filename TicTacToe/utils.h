@@ -10,5 +10,4 @@ typedef struct
 
 int Input_GetInt();
 
-
 #endif

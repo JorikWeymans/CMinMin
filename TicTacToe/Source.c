@@ -16,7 +16,7 @@ char title[] = "***************************\n*** CMinMin Tic-Tac-Toe ***\n******
 
 int main()
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 
 	// *** 
 	// * alloc resources
@@ -53,13 +53,18 @@ startOfGame:
 		
 		if (Board_SetPiece(pBoard, x, y, playerPiece) == false)
 		{
+			// printing player
+			printf_s("Your move\n");
 			Board_Print(pBoard);
 			printf_s("Could not place piece\n");
 		}
 		else if(Board_CheckBoardState(pBoard) != true)
 		{
-			// AI
+			// printing player
+			printf_s("Your move\n");
 			Board_Print(pBoard);
+
+			// AI
 			printf_s("AI move\n");
 			AI_MakeAMove(pAI, pBoard);
 			Board_Print(pBoard);
@@ -105,7 +110,7 @@ bool GetInput(struct Board* pBoard, enum BoardPiece playerPiece, int* x, int* y)
 	// * Input
 	// ***
 
-	printf("Enter coordinates, divided by space\nAn %s will be placed there\Enter -1 to quit: ", BoardPiece_ToString(playerPiece));
+	printf("Enter coordinates, divided by space\nAn %s will be placed there\nEnter -1 to quit: ", BoardPiece_ToString(playerPiece));
 	if (CheckCorrectInput(x, y) == false) return false;
 
 
