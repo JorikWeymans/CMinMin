@@ -65,7 +65,7 @@ startOfGame:
 			Board_Print(pBoard);
 
 			// AI
-			printf_s("AI move\n");
+			printf_s("AI's move\n");
 			AI_MakeAMove(pAI, pBoard);
 			Board_Print(pBoard);
 		}
