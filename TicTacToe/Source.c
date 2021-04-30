@@ -12,7 +12,7 @@ bool CheckCorrectInput(int* x, int* y);
 void HandleDifficultySelect(struct AI* pAI);
 void HandlePieceToUse(struct AI* pAI, enum BoardPiece* pPiece);
 bool HandlePlayAgain();
-char title[] = "***************************\n*** CMinMin Tic-Tac-Toe ***\n***************************\n";
+char title[] = "***************************\n***** C++ Tic-Tac-Toe *****\n***************************\n";
 
 int main()
 {
