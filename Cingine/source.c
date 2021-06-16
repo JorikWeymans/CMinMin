@@ -3,12 +3,43 @@
 #include <stdlib.h>
 #include <Windows.h>
 #include <time.h>
+#include <math.h>
 
 const int SCREEN_WIDTH = 50;
 const int SCREEN_HEIGHT = 50;
 int IIndex = 0;
 
 int main()
+{
+	float calc = 0;
+    time_t begin = time(NULL);
+	
+    for (long i = 0; i < 15000000; i++)
+    {
+	    if(calc > 5)
+	    {
+            calc = sinf((float)i);
+	    }
+        else
+        {
+            calc = cosf((float)i);
+        }
+    }
+    printf_s("cout %f\n", calc);
+
+	
+    time_t end = time(NULL);
+
+    double d = difftime(end, begin);
+
+	float fl = 0.0025f;
+    printf("for loop used %f seconds to complete the " \
+        "execution\n", difftime(end, begin));
+
+    system("pause");
+    return 0;
+}
+int mains()
 {
 	//Allocating resources
     wchar_t* screen = (wchar_t*)malloc((size_t)SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(wchar_t));
@@ -24,8 +55,7 @@ int main()
     }
 	SetConsoleActiveScreenBuffer(handle);
 
-    time_t seconds;
-    seconds = time(NULL);
+ 
 	
 
 
